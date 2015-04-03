@@ -3,22 +3,21 @@ $(document).ready(function() {
         minLength: 3,
         source: function(request, response) {
             $.ajax({
-                type: "GET",
+                type: "POST",
                 dataType: "json",
-                url: "http://infoweb/~jacquin-c/codePostalComplete.php",
-                data: 'commune=' + $('#commune').val(),
+                url: "http://infoweb-ens/~jacquin-c/codePostal/commune.php",
+                data: 'commune=' + $('#commune').val() + '&maxRows=10',
                 success: function(data) {
                     response($.map(data, function(v,i){
                         return {
-                            label: v.Ville,
-                            cp : v.CodePostal
+                            label: v.Ville
                         }
                     }));
                 }
             });
         },
         select: function(event,ui) {
-            $("#result").text(ui.item.cp);
-        }     
+            $("#result").text(ui.item.label);
+        }      
     }); 
 });

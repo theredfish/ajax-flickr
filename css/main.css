@@ -1,0 +1,90 @@
+body
+{
+	background-color: #EAFBFF;
+}
+
+form
+{
+	text-align: center;
+}
+
+.titre
+{
+	font-weight: bold;
+	text-decoration: underline;
+	text-align: left;
+}
+
+.popFont
+{
+	position: absolute;
+	height: 100%;
+	width : 100%;
+	z-index: 2000;
+	top: 0px;
+	display: none;
+	background-color: rgba(48,48,48,0.75); 
+}
+
+#detail
+{
+	width: 18%;
+	position: fixed;
+	top: 18%;
+	right: 0.2%;
+	text-align: right;
+	border: solid 1px;
+	background-color: #3A3F40;
+	color: white;
+}
+
+.form-group
+{
+	color: white;
+}
+
+.haut
+{
+	background-color: #3A3F40;
+}
+
+.placement
+{
+	position: absolute;
+	/* padding-top: 2%; */
+}
+
+#placementDroit
+{
+	float: right;
+}
+
+#commune, #submit-photos
+{
+	margin-right: 40%;
+	margin-top: 5%;
+	width: 100%;
+	color: #3A3F40;
+}
+
+.row
+{
+	margin-right: 0px !important;
+	margin-left: 0px !important;
+}
+
+.thumbnail
+{
+	width: auto;
+	height: 20%;
+}
+
+img
+{
+	max-height: 100%;
+	width: auto;
+	padding-bottom: 3%;
+	padding-top: 3%;
+/*	width: 100%;
+	height: 100%;*/
+}
