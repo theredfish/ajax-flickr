@@ -1,72 +1,51 @@
-var page = 1;
-
 $(document).ready(function() {
-    
+    var page = 0;
+    // Get the number of images to show
+    var selectedNumber = parseInt($("input[type='radio']:checked").val());   
 
     $( "#submit-photos" ).on("click", function() {
-        // Clear the div of images when a new research is done
-        page = 1;
-        $("#showImages").empty()
-
-        // Ajax request
-        $.ajax({
-            type: "POST",
-            dataType: "json",
-            url: "https://api.flickr.com/services/rest/?&method=flickr.photos.search&api_key=0ec1c8867eeca73bca63ed9b7365ad5b&format=json&jsoncallback=?",
-            data: "tags=" + $("#commune").val()+"&per_page="+getSize(),
-            success: function(data) {
-                $.each(data.photos.photo, function(i, item) {
-                    // Show only the good number of images
-                    if(i == selectedNumber)
-                        return false;
-                    // Call getImages function to delegate the responsability
-                    getImages(item);
-                    
-                })
-            }
-        });
-
+        page = 1
+        getData(page);
     });
 
     $("#precedent").on("click", function(){
-        precedent();
+        if (page != 1)
+            page--;
+        console.log(page)
+        getData(page);
     });
 
     $("#suivant").on("click", function(){
-        suivant();
-    });
-});
-
-    function suivant()
-    {
         page++;
-        changement();
-    }
+        console.log(page)
+        getData(page);
+    });
 
-    function precedent()
-    {
-        page--;
-        changement();
-    }
+    // When a change occurs, update the number of images to display
+    $("input[type='radio']").on("change",function() {
+        selectedNumber = parseInt($("input[type='radio']:checked").val());
+    })
 
-    function changement()
+    
+    // Function to get images data from Flickr API
+    function getData(atPage)
     {
+        // Clear the div of images when a new research is done
         $("#showImages").empty();
-        
         $.ajax({
             type: "GET",
             dataType: "json",
             //https://www.flickr.com/services/feeds/docs/photos_public/
             url: "https://api.flickr.com/services/rest/?&method=flickr.photos.search&api_key=0ec1c8867eeca73bca63ed9b7365ad5b&format=json&jsoncallback=?",
-            data: "tags=" + $("#commune").val()+"&per_page="+getSize()+"&page="+page,
+            data: "tags=" + $("#commune").val()+"&per_page="+selectedNumber+"&page="+atPage,
             success: function(data) {
-                $.each(data.photos.photo, function(i, item) {
+                $.each(data.photos.photo, function(i, image) {
                     // Show only the good number of images
                     if(i == selectedNumber)
                         return false;
 
                     // Call getImages function to delegate the responsability
-                    getImages(item);
+                    getImages(image);
                     
                 })
                 
@@ -74,17 +53,17 @@ $(document).ready(function() {
         });
     }
 
-    function popImage(image)
-    {
-        $(".popFont")[0].style.display="block";
-        /*image.style.width="1000px";
-        image.style.height="auto";*/
+    // Function to show image
+    function getImages(image) {
+        var link = "http://farm"+image.farm+".staticflickr.com/"+image.server+"/"+image.id+"_"+image.secret+"_m.jpg";
+        $("#showImages").append('<div class="col-lg-4 col-md-4 col-xs-4"><a href="#" class="thumbnail"><img class="img-responsive center-block" src="'+link+'" alt="Generic placeholder thumbnail"></a></div>')
     }
-	
-	function detail(id)
-	{ 
+
+    // Function to get specific information about an image (ex : title, author, date, ...)
+    function getImageInformation(id)
+    { 
         $.ajax({
-            type: "GET",
+            type: "POST",
             dataType: "json",
             //https://www.flickr.com/services/feeds/docs/photos_public/
             url: "https://api.flickr.com/services/rest/?&method=flickr.photos.getInfo&api_key=0ec1c8867eeca73bca63ed9b7365ad5b&format=json&jsoncallback=?",
@@ -98,25 +77,5 @@ $(document).ready(function() {
                 $("#detailDate").text(data.photo.dates.posted);
             }
         });
-
-    	/*'<div class="col-lg-12 col-md-12 col-xs-10">Titre :' + titre + '</div><div class="col-lg-12 col-md-12 col-xs-10">Date :' + date + '</div><div class="col-lg-12 col-md-12 col-xs-10">Auteur :' + auteur + '</div>'*/
-	}
-
-    // Get images from research
-    function getImages(item) {
-        var link = "http://farm"+item.farm+".staticflickr.com/"+item.server+"/"+item.id+"_"+item.secret+"_m.jpg";
-        $("#showImages").append('<div class="col-lg-4 col-md-4 col-xs-4"><a href="#" onmouseover="detail('+item.id+')" class="thumbnail"><img onClick="popImage(this)" class="img-responsive center-block" src="'+link+'" alt="Generic placeholder thumbnail"></a></div>')
     }
-
-    // Get the number of images to show
-    var selectedNumber = parseInt($("input[type='radio']:checked").val());
-
-    $("input[type='radio']").on("change",function() {
-        selectedNumber = parseInt($("input[type='radio']:checked").val());
-    })
-
-    function getSize()
-    {
-        selectedNumber = parseInt($("input[type='radio']:checked").val());
-        return selectedNumber;
-    }
+});
