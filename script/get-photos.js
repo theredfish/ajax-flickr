@@ -3,7 +3,7 @@ $(document).ready(function() {
     // Get the number of images to show
     var selectedNumber = parseInt($("input[type='radio']:checked").val());   
 
-    $( "#submit-photos" ).on("click", function() {
+    $( "#submit-photos-pagination" ).on("click", function() {
         page = 1
         getDataPaginationMode(page);
     });
@@ -55,6 +55,23 @@ $(document).ready(function() {
     {
         // Clear the div of images when a new research is done
         $("#showImagesCarouselMode").empty();
+        $.getJSON("agile_carousel/agile_carousel_data.php", function(data) {
+        $(document).ready(function(){
+            $("#flavor_1").agile_carousel({
+                carousel_data: data,
+                carousel_outer_height: 228,
+                carousel_height: 228,
+                slide_height: 230,
+                carousel_outer_width: 480,
+                slide_width: 480,
+                transition_time: 300,
+                timer: 4000,
+                continuous_scrolling: true,
+                control_set_1: "numbered_buttons",
+                no_control_set: "hover_previous_button,hover_next_button"
+            });
+        });
+    });
     }
 
     // Function to show image
