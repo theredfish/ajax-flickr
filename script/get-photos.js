@@ -1,7 +1,13 @@
-$(document).ready(function() {
+$(document).ready(function() 
+{
     var page = 0;
     // Get the number of images to show
-    var selectedNumber = parseInt($("input[type='radio']:checked").val());   
+
+    var selectedNumber = parseInt($("input[type='radio']:checked").val()); 
+
+    $("#precedent").hide();
+    $("#suivant").hide();
+    $("#detail").hide();
 
     $( "#submit-photos-pagination" ).on("click", function() {
         page = 1
@@ -36,7 +42,10 @@ $(document).ready(function() {
             url: "https://api.flickr.com/services/rest/?&method=flickr.photos.search&api_key=0ec1c8867eeca73bca63ed9b7365ad5b&format=json&jsoncallback=?",
             data: "tags=" + $("#commune").val()+"&per_page="+selectedNumber+"&page="+atPage,
             success: function(data) {
-                $.each(data.photos.photo, function(i, image) {
+                $("#precedent").show();
+                $("#suivant").show();
+                $.each(data.photos.photo, function(i, image) 
+                {
                     // Show only the good number of images
                     if(i == selectedNumber)
                         return false;
@@ -77,26 +86,58 @@ $(document).ready(function() {
     // Function to show image
     function getImagesPaginationMode(image) {
         var link = "http://farm"+image.farm+".staticflickr.com/"+image.server+"/"+image.id+"_"+image.secret+"_m.jpg";
-        $("#showImagesPaginationMode").append('<div class="col-lg-4 col-md-4 col-xs-4"><a href="#" class="thumbnail"><img class="img-responsive center-block" src="'+link+'" alt="Generic placeholder thumbnail"></a></div>')
+        $("#showImagesPaginationMode").append('<div class="col-lg-12 col-md-12 col-xs-12"><a href="#"><img onmouseover="getImageInformation('+image.id+')" id="moreInformation" src="'+link+'" alt="Generic placeholder"></a></div>')
     }
 
     // Function to get specific information about an image (ex : title, author, date, ...)
-    function getImageInformation(id)
-    { 
-        $.ajax({
-            type: "POST",
-            dataType: "json",
-            //https://www.flickr.com/services/feeds/docs/photos_public/
-            url: "https://api.flickr.com/services/rest/?&method=flickr.photos.getInfo&api_key=0ec1c8867eeca73bca63ed9b7365ad5b&format=json&jsoncallback=?",
-            data: "photo_id="+id,
-            success: function(data) 
+    /*$("#moreInformation").on("click", function()
+    {
+        $("#detail").show();*/
+        function getImageInformation(id)
+        { 
+            $.ajax(
             {
-                // alert(data.photo, data.photo.title._content, data.photo.owner.username, data.photo.dates.posted);
-                $("#detail").show();
-                $("#detailTitre").text(data.photo.title._content);
-                $("#detailAuteur").text(data.photo.owner.username);
-                $("#detailDate").text(data.photo.dates.posted);
-            }
-        });
+                type: "POST",
+                dataType: "json",
+                url: "https://api.flickr.com/services/rest/?&method=flickr.photos.getInfo&api_key=0ec1c8867eeca73bca63ed9b7365ad5b&format=json&jsoncallback=?",
+                data: "photo_id="+id,
+                success: function(data) 
+                {
+                    var date = data.photo.dates.posted;
+
+                    var formattedTime = timeConverter(date)
+
+                    // alert(data.photo, data.photo.title._content, data.photo.owner.username, data.photo.dates.posted);
+                    $("#detail").show();
+                    if (data.photo.title._content == '') 
+                    {
+                        $("#detailTitre").text("[Photo sans titre...]");
+                    }
+                    else
+                    {
+                        $("#detailTitre").text(data.photo.title._content);
+                    }
+                    $("#detailAuteur").text(data.photo.owner.username);
+                    $("#detailDate").text(formattedTime);
+                }
+            });
+        }
+    /*});*/
+    
+
+
+    function timeConverter(UNIX_timestamp)
+    {
+        var a = new Date(UNIX_timestamp*1000);
+        var months = ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
+        var year = a.getFullYear();
+        var month = months[a.getMonth()];
+        var date = a.getDate();
+        var hour = a.getHours();
+        var min = a.getMinutes();
+        var sec = a.getSeconds();
+        var time = date + ' ' + month + ' ' + year + ' - ' + hour + ':' + min + ':' + sec ;
+
+        return time;
     }
 });

@@ -1,8 +1,7 @@
-
 <html>
 	<head>
-		<title>Ville</title>
-		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+		<title>Recherche de Photo</title>
+		
 		<link rel="stylesheet" href="http://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
 		<link rel="stylesheet" href="css/carousel/agile_carousel.css">
 		<link rel="stylesheet" type="text/css" href="css/main.css">
@@ -12,51 +11,89 @@
 		<script src="http://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
 		<script type="text/javascript" src="script/get-photos.js"></script>
 		<script type="text/javascript" src="script/auto-complete-city.js"></script>
-		
 	</head>
 
 	<body>
-		<div class="haut row navbar">
-			<div class="col-lg-2">
-			</div>
-			<div class="col-lg-8 col-md-12 col-xs-12">
-				<form class="form-inline" method="post" action="">
-					<div class="row">
-						<div class="col-lg-4 col-md-12 col-xs-12">
-							<div class="form-group">
-							    <input id="commune" type="text" name="commune" placeholder="Entrez une ville. Ex : Nantes">
-							  </div>
-						</div>
-						<div class="col-lg-4 col-md-12 col-xs-12">
-							<div class="form-group">
-							  	Nombre de photos :
-							  	<br/>
-								<label class="radio-inline">
-									<input type="radio" name="inlineRadioOptions" id="inlineRadio1" value="15" checked="selected"> 15
-								</label>
-								<label class="radio-inline">
-								  	<input type="radio" name="inlineRadioOptions" id="inlineRadio2" value="30"> 30
-								</label>
-								<label class="radio-inline">
-									<input type="radio" name="inlineRadioOptions" id="inlineRadio3" value="45"> 45
-								</label>
-								<label class="radio-inline">
-								  	<input type="radio" name="inlineRadioOptions" id="inlineRadio2" value="60"> 60
-								</label>
-								<label class="radio-inline">
-									<input type="radio" name="inlineRadioOptions" id="inlineRadio3" value="75"> 75
-								</label>
-							</div>
-						</div>
-						<div class="col-lg-4 col-md-12 col-xs-12">
-							<input id="submit-photos-pagination" type="button" value="Rechercher" class="btn btn-default">
-						</div>
-					</div>
-				</form>
-			</div>
-			<div class="col-lg-2 col-md-2 col-xs-2">
-			</div>
-		</div>
+		<nav class="haut navbar navbar-fixed-top">
+		    <div class="container-fluid">
+		    	<div class="row">
+		            <div class="col-lg-3 col-md-3 col-xs-3">
+		    <!-- Brand and toggle get grouped for better mobile display -->
+				        <div class="navbar-header">
+				            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+				                <span class="sr-only">
+				                	Toggle navigation
+				                </span>
+				                <span class="icon-bar"></span>
+				                <span class="icon-bar"></span>
+				                <span class="icon-bar"></span>
+				            </button>
+				            <a class="navbar-brand" href="#">
+				                Projet JQuery - API Flickr
+				            </a>
+				        </div>
+				    </div>
+				    <div class="col-lg-9 col-md-9 col-xs-9">
+				        <form class="navbar-form">
+				            <div class="form-group" method="post" action="">
+				              	<div class="row">
+		            				<div class="col-lg-3 col-md-3 col-xs-3">
+					              		<div class="form-group">
+					              			<div class="row" id="nbPhoto">
+					              				<div class="col-lg-12 col-md-12 col-xs-12">
+												  	Nombre de photos :
+												  	<br/>
+												</div>
+											  	<div class="col-lg-3 col-md-3 col-xs-3">
+													<label class="radio-inline">
+														<input type="radio" name="inlineRadioOptions" id="inlineRadio1" value="15" checked="selected"> 15
+													</label>
+												</div>
+												<div class="col-lg-3 col-md-3 col-xs-3">
+													<label class="radio-inline">
+													  	<input type="radio" name="inlineRadioOptions" id="inlineRadio2" value="30"> 30
+													</label>
+												</div>
+												<div class="col-lg-3 col-md-3 col-xs-3">
+													<label class="radio-inline">
+														<input type="radio" name="inlineRadioOptions" id="inlineRadio3" value="45"> 45
+													</label>
+												</div>
+												<div class="col-lg-3 col-md-3 col-xs-3">
+													<label class="radio-inline">
+													  	<input type="radio" name="inlineRadioOptions" id="inlineRadio2" value="60"> 60
+													</label>
+												</div>
+					              			</div>
+										</div>
+									</div>
+					              	<div class="col-lg-2 col-md-2 col-xs-2">
+						                <div class="form-group">
+											  	<div class="col-lg-12 col-md-12 col-xs-12 text-left">
+													<label class="radio-inline">
+														<input type="radio" name="inlineRadioOptions1" id="inlineRadio1" value="1" checked="selected"> Par page
+													</label>
+												</div>
+												<div class="col-lg-12 col-md-12 col-xs-12 text-left">
+													<label class="radio-inline">
+														<input type="radio" name="inlineRadioOptions1" id="inlineRadio3" value="3"> Caroussel
+													</label>
+												</div>
+					              			</div>
+						            </div>
+						            <div class="col-lg-2 col-md-2 col-xs-2" id="ville">
+						                <input type="text" placeholder="Ville ex : Nantes" class="form-control" id="commune" autofocus/>
+						            </div>
+						            <div class="col-lg-2 col-md-2 col-xs-2">
+						                <input id="submit-photos-pagination" type="button" value="Rechercher" class="btn btn-default">
+						            </div>
+						        </div>
+					        </div>
+				    	</form>
+				    </div>
+				</div>
+		    </div><!-- /.container-fluid -->
+		</nav>
 
 		<div class="row">
 			<div class="col-lg-2 col-md-2 col-xs-2">
@@ -72,44 +109,21 @@
 		</div>
 
 		<div class="row">
-			<div class="col-lg-10 col-md-10 col-xs-10 placement">
+			<div class="col-lg-3 col-md-3 col-xs-3"></div>
+			<div class="col-lg-6 col-md-6 col-xs-6 boite">
 				<div class="row">		
 					<div id="showImagesPaginationMode"></div>
 				</div>
 			</div>
-			<div class="col-lg-2 col-md-2 col-xs-2">
+			<div class="col-lg-3 col-md-3 col-xs-3">
 				<div>
-					<div id="detail" style="display:none">
+					<div id="detail">
 						<div class="titre">Titre :</div><br><span id="detailTitre"></span><br>
 						<div class="titre">Auteur :</div><br><span id="detailAuteur"></span><br>
 						<div class="titre">Date de création :</div><br><span id="detailDate"></span><br>
 					</div>
 				</div>
 			</div>			
-		</div>
-
-		<div class="row">
-			<div class="col-lg-2 col-md-2 col-xs-2">
-			</div>
-			<div class="col-lg-8 col-md-8 col-xs-8">
-				<center>
-					<div id="taille"></div>
-				</center>
-			</div>
-			<div class="col-lg-2 col-md-2 col-xs-2">
-			</div>
-		</div>
-
-		<div class="popFont">
-			<div class="row">
-				<div class="col-lg-1 col-md-1 col-xs-1">
-				</div>
-				<div class="col-lg-10 col-md-10 col-xs-10 ">
-					Coucou
-				</div>
-				<div class="col-lg-1 col-md-1 col-xs-1">
-				</div>
-			</div>
 		</div>
 	</body>
 </html>
