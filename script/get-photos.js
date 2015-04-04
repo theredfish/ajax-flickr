@@ -49,15 +49,15 @@ $(document).ready(function() {
             }
         });
     }
-
+    
     // Function to get data images for the carosuel mode
     function getDataCarouselMode(atPage)
     {
         // Clear the div of images when a new research is done
         $("#showImagesCarouselMode").empty();
-        $.getJSON("agile_carousel/agile_carousel_data.php", function(data) {
+        $.getJSON("test/agile_carousel_data.php", function(data) {
         $(document).ready(function(){
-            $("#flavor_1").agile_carousel({
+            $("#showImagesCarouselMode").agile_carousel({
                 carousel_data: data,
                 carousel_outer_height: 228,
                 carousel_height: 228,
