@@ -1,3 +1,13 @@
+.navbar {
+	border: none;
+}
+
+a
+{
+	color: white !important;
+	font-weight: bold;
+}
+
 body
 {
 	background-color: #EAFBFF;
@@ -26,17 +36,29 @@ form
 	background-color: rgba(48,48,48,0.75); 
 }
 
+
 #detail
 {
-	width: 18%;
+	width: 30%;
 	position: fixed;
-	top: 18%;
-	right: 0.2%;
+	top: 20%;
+	right: 0%;
 	text-align: right;
 	border: solid 1px;
 	background-color: #3A3F40;
 	color: white;
+	padding-right: 10px;
 }
+
+/*#commune
+{
+	padding-right: 2px;
+	padding-left: 2px;
+	border-right: 0px;
+	border-left: 0px;
+
+}*/
+
 
 .form-group
 {
@@ -59,12 +81,24 @@ form
 	float: right;
 }
 
-#commune, #submit-photos
+#commune
 {
-	margin-right: 40%;
-	margin-top: 5%;
+	margin-right: 10px !important;
+	margin-left: 10px !important;
+	margin-top: 0%;
 	width: 100%;
 	color: #3A3F40;
+
+}
+
+#submit-photos-pagination
+{
+	margin-right: 10px !important;
+	margin-left: 10px !important;
+	margin-top: 0%;
+	width: 100%;
+	color: #3A3F40;
+
 }
 
 .row
@@ -73,16 +107,22 @@ form
 	margin-left: 0px !important;
 }
 
-.thumbnail
-{
-	width: auto;
-	height: 20%;
-}
-
 img
 {
-	max-height: 100%;
-	width: auto;
-	padding-bottom: 3%;
-	padding-top: 3%;
+	height: auto;
+  width: 50%;
+  padding-bottom: 3%;
+  padding-top: 10%;
+
+#detailTitre, #detailAuteur, #detailDate
+{
+	margin-right: 2%;
+}
+
+#precedent, #suivant
+{
+	padding-top: 1%;
+	padding-bottom: 1%;
+	margin-top: 80px;
+	width: 15%;
 }
