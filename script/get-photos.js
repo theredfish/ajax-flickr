@@ -5,20 +5,18 @@ $(document).ready(function() {
 
     $( "#submit-photos" ).on("click", function() {
         page = 1
-        getData(page);
+        getDataPaginationMode(page);
     });
 
     $("#precedent").on("click", function(){
         if (page != 1)
             page--;
-        console.log(page)
-        getData(page);
+        getDataPaginationMode(page);
     });
 
     $("#suivant").on("click", function(){
         page++;
-        console.log(page)
-        getData(page);
+        getDataPaginationMode(page);
     });
 
     // When a change occurs, update the number of images to display
@@ -26,12 +24,11 @@ $(document).ready(function() {
         selectedNumber = parseInt($("input[type='radio']:checked").val());
     })
 
-    
-    // Function to get images data from Flickr API
-    function getData(atPage)
+    // Function to get images data from Flickr API in pagination mode
+    function getDataPaginationMode(atPage)
     {
         // Clear the div of images when a new research is done
-        $("#showImages").empty();
+        $("#showImagesPaginationMode").empty();
         $.ajax({
             type: "GET",
             dataType: "json",
@@ -45,7 +42,7 @@ $(document).ready(function() {
                         return false;
 
                     // Call getImages function to delegate the responsability
-                    getImages(image);
+                    getImagesPaginationMode(image);
                     
                 })
                 
@@ -53,10 +50,17 @@ $(document).ready(function() {
         });
     }
 
+    // Function to get data images for the carosuel mode
+    function getDataCarouselMode(atPage)
+    {
+        // Clear the div of images when a new research is done
+        $("#showImagesCarouselMode").empty();
+    }
+
     // Function to show image
-    function getImages(image) {
+    function getImagesPaginationMode(image) {
         var link = "http://farm"+image.farm+".staticflickr.com/"+image.server+"/"+image.id+"_"+image.secret+"_m.jpg";
-        $("#showImages").append('<div class="col-lg-4 col-md-4 col-xs-4"><a href="#" class="thumbnail"><img class="img-responsive center-block" src="'+link+'" alt="Generic placeholder thumbnail"></a></div>')
+        $("#showImagesPaginationMode").append('<div class="col-lg-4 col-md-4 col-xs-4"><a href="#" class="thumbnail"><img class="img-responsive center-block" src="'+link+'" alt="Generic placeholder thumbnail"></a></div>')
     }
 
     // Function to get specific information about an image (ex : title, author, date, ...)
