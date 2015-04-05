@@ -1,27 +1,37 @@
 $(document).ready(function() 
 {
+    $( "#dialog" ).dialog({ 
+        autoOpen: false,
+        title: "Informations de l'image",
+        width: 660
+    });
 
-    $( "#dialog" ).dialog({ autoOpen: false });
     $("body").on("click", ".swipebox", function(){
-        // Clear the dialog box
-        $( "#dialog" ).empty()
+        // Clear the dialog box content
+        $("#dialog").empty()
         
+        // If the dialog box is already open we close it
+        var isOpen = $("#dialog").dialog("isOpen")
+        if (isOpen) {
+            console.log("open")
+            $("#dialog").dialog({
+                position: { my: "center", at: "center", of: window }
+            });
+        }
+
         // Some information about the image
-        var link = $(this).attr('href');
-        var id = $(this).attr('id');
+        var link = $(this).attr('href')
+        var id = $(this).attr('id')
         getImageInformation(id)
-        console.log(link)
-        console.log(id)
 
         // Construct the dialog box content
-        $("#dialog").append('<p>Titre : <span id="detailTitre"></span></p>')
-        $("#dialog").append('<p>Auteur : <span id="detailAuteur"></span></p>')
-        $("#dialog").append('<p>Date : <span id="detailDate"></span></p><br><br>')
+        $("#dialog").append('<p><b>Titre :</b> <span id="detailTitre"></span></p>')
+        $("#dialog").append('<p><b>Auteur :</b> <span id="detailAuteur"></span></p>')
+        $("#dialog").append('<p><b>Date :</b> <span id="detailDate"></span></p><br><br>')
         $( "#dialog" ).append('<img src="'+link+'">')
 
         // Open the dialog box AFTER all operations
-        $( "#dialog" ).dialog( "open" );
-        /*alert($('.swipebox').attr('href'))*/
+        $( "#dialog" ).dialog( "open" )
         return false;
     });
 
@@ -37,7 +47,53 @@ $(document).ready(function()
     $(".endButtons").hide()
 
     // Research button click
-    $("#submit-photos-pagination").on("click", function() {
+    $("#submit-photos-pagination").on("click", function(){
+        loadContent();
+    });
+
+    // Research by keypress enter event
+    $("#commune").keypress(function (e) {
+        if (e.which == 13) {
+            $('#submit-photos-pagination').trigger('click');
+        }
+    });   
+
+    // Previous button click
+    $(".precedent").on("click", function(){
+        // Always close the dialog box if it's open
+        var isOpen = $("#dialog").dialog("isOpen")
+        if (isOpen)
+            $("#dialog").dialog("close")
+
+        if (page != 1)
+            page--
+        watchPreviousButton(page)
+        getDataPaginationMode(page)
+    });
+
+    // Next button click
+    $(".suivant").on("click", function(){
+        // Always close the dialog box if it's open
+        var isOpen = $("#dialog").dialog("isOpen")
+        if (isOpen)
+            $("#dialog").dialog("close")
+
+        page++;
+        watchPreviousButton(page)
+        getDataPaginationMode(page);
+    });
+
+    // When a change occurs, update the number of images to display
+    $("input[type='radio']").on("change",function() {
+        selectedNumber = parseInt($("input[type='radio']:checked").val());
+    })
+
+    $("input.mode[type='radio']").on("change",function() {
+        mode = $("input.mode[type='radio']:checked").val()
+    });
+
+    // Function to show gallery or carousel content
+    function loadContent(){
         page = 1
         if( $("#commune").val() == ""){
             alert("Vous devez saisir au moins un mot clé")
@@ -56,31 +112,7 @@ $(document).ready(function()
             $("#carouselMode").show() 
             $("#paginationMode").hide()
         }
-    });
-
-    // Previous button click
-    $(".precedent").on("click", function(){
-        if (page != 1)
-            page--
-        watchPreviousButton(page)
-        getDataPaginationMode(page)
-    });
-
-    // Next button click
-    $(".suivant").on("click", function(){
-        page++;
-        watchPreviousButton(page)
-        getDataPaginationMode(page);
-    });
-
-    // When a change occurs, update the number of images to display
-    $("input[type='radio']").on("change",function() {
-        selectedNumber = parseInt($("input[type='radio']:checked").val());
-    })
-
-    $("input.mode[type='radio']").on("change",function() {
-        mode = $("input.mode[type='radio']:checked").val()
-    });
+    }
 
     // This function change class of previous button relative with page
     function watchPreviousButton(page){
@@ -169,7 +201,7 @@ $(document).ready(function()
     // Function to show image
     function getImagesCarouselMode(image) {
         var link = "http://farm"+image.farm+".staticflickr.com/"+image.server+"/"+image.id+"_"+image.secret+"_z.jpg";
-        $(".jcarousel-list").append('<li><img src="'+link+'" width="600" height="400" alt=""></li>')
+        $(".jcarousel-list").append('<li><a class="swipebox" href="'+link+'" title="'+image.title+'" id="'+image.id+'"><img src="'+link+'" width="600" height="400" alt=""></a></li>')
         $('.jcarousel').jcarousel('reload');
     }
 
@@ -184,13 +216,7 @@ $(document).ready(function()
             data: "photo_id="+id,
             success: function(data) 
             {
-                var date = data.photo.dates.posted;
-
-                var formattedTime = timeConverter(date)
-
-                alert("photo: "+data.photo+", title: "+data.photo.title._content+", username: "+data.photo.owner.username+", posted le: "+data.photo.dates.posted);
-                //$("#detail").show();
-                $("#detailTitre").text("[Photo sans titre...]");
+                var formattedTime = timeConverter(data.photo.dates.posted)
                 $("#detailTitre").text(data.photo.title._content);
                 $("#detailAuteur").text(data.photo.owner.username);
                 $("#detailDate").text(formattedTime);
