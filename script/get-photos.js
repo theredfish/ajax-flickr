@@ -1,10 +1,35 @@
 $(document).ready(function() 
 {
+
+    $( "#dialog" ).dialog({ autoOpen: false });
+    $("body").on("click", ".swipebox", function(){
+        // Clear the dialog box
+        $( "#dialog" ).empty()
+        
+        // Some information about the image
+        var link = $(this).attr('href');
+        var id = $(this).attr('id');
+        getImageInformation(id)
+        console.log(link)
+        console.log(id)
+
+        // Construct the dialog box content
+        $("#dialog").append('<p>Titre : <span id="detailTitre"></span></p>')
+        $("#dialog").append('<p>Auteur : <span id="detailAuteur"></span></p>')
+        $("#dialog").append('<p>Date : <span id="detailDate"></span></p><br><br>')
+        $( "#dialog" ).append('<img src="'+link+'">')
+
+        // Open the dialog box AFTER all operations
+        $( "#dialog" ).dialog( "open" );
+        /*alert($('.swipebox').attr('href'))*/
+        return false;
+    });
+
     // Initialization
     var page = 1
     var selectedNumber = parseInt($("input[type='radio']:checked").val())
     var mode =  $("input.mode[type='radio']:checked").val()
-    console.log(mode)
+
     $(".precedent").addClass("disabled")
     $(".suivant").addClass("disabled")
     $("#carouselMode").hide()
@@ -19,7 +44,6 @@ $(document).ready(function()
             $("#commune").focus()
             return false
         }
-
         // Select the correct mode
         if (mode == "page") {
             getDataPaginationMode(page);
@@ -75,11 +99,8 @@ $(document).ready(function()
         $(".suivant").removeClass("disabled")
         // Clear the div of images when a new research is done
         $("#showImagesPaginationMode").empty();
-        // Set the div as justified gallery
-        $("#showImagesPaginationMode").justifiedGallery({
-            rowHeight : 300,
-            margins : 3
-        });
+        
+        // Ajax JSON request
         $.ajax({
             type: "POST",
             dataType: "json",
@@ -121,7 +142,6 @@ $(document).ready(function()
 
                     // Call getImages function to delegate the responsability
                     getImagesCarouselMode(image);
-                    
                 })
             },
             error : function(){
@@ -135,10 +155,14 @@ $(document).ready(function()
     function getImagesPaginationMode(image) {
         var link = "http://farm"+image.farm+".staticflickr.com/"+image.server+"/"+image.id+"_"+image.secret+"_z.jpg";
         var title = image.title
-
-        $("#showImagesPaginationMode").append('<a href="#"><img src="'+link+'" alt="'+image.title+'"></a>')
-        $("#showImagesPaginationMode").justifiedGallery().on('jg.complete', function (e) {
-            return true;
+        $("#showImagesPaginationMode").append('<a href="'+link+'" class="swipebox" title="'+image.title+'" id="'+image.id+'"><img src="'+link+'" alt="'+image.title+'"></a>')
+        
+        $("#showImagesPaginationMode").justifiedGallery({
+            lastRow : 'nojustify', 
+            rowHeight : 300, 
+            margins : 1
+        }).on('jg.complete', function () {
+          return true;
         });
     }
 
@@ -147,7 +171,6 @@ $(document).ready(function()
         var link = "http://farm"+image.farm+".staticflickr.com/"+image.server+"/"+image.id+"_"+image.secret+"_z.jpg";
         $(".jcarousel-list").append('<li><img src="'+link+'" width="600" height="400" alt=""></li>')
         $('.jcarousel').jcarousel('reload');
-        /*<div class="col-lg-12 col-md-12 col-xs-12"><a href="#"><img id="moreInformation" src="'+link+'" alt="Generic placeholder"></a></div>*/
     }
 
     // Function to get specific information about an image (ex : title, author, date, ...)
@@ -165,16 +188,10 @@ $(document).ready(function()
 
                 var formattedTime = timeConverter(date)
 
-                // alert(data.photo, data.photo.title._content, data.photo.owner.username, data.photo.dates.posted);
-                $("#detail").show();
-                if (data.photo.title._content == '') 
-                {
-                    $("#detailTitre").text("[Photo sans titre...]");
-                }
-                else
-                {
-                    $("#detailTitre").text(data.photo.title._content);
-                }
+                alert("photo: "+data.photo+", title: "+data.photo.title._content+", username: "+data.photo.owner.username+", posted le: "+data.photo.dates.posted);
+                //$("#detail").show();
+                $("#detailTitre").text("[Photo sans titre...]");
+                $("#detailTitre").text(data.photo.title._content);
                 $("#detailAuteur").text(data.photo.owner.username);
                 $("#detailDate").text(formattedTime);
             }
@@ -198,4 +215,3 @@ $(document).ready(function()
         return time;
     }
 });
-
