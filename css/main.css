@@ -68,6 +68,7 @@ form
 .haut
 {
 	background-color: #3A3F40;
+	padding-top: 5px;
 }
 
 .placement
@@ -93,12 +94,7 @@ form
 
 #submit-photos-pagination
 {
-	margin-right: 10px !important;
-	margin-left: 10px !important;
-	margin-top: 0%;
-	width: 100%;
 	color: #3A3F40;
-
 }
 
 .row
@@ -106,13 +102,6 @@ form
 	margin-right: 0px !important;
 	margin-left: 0px !important;
 }
-
-img
-{
-	height: auto;
-  width: 50%;
-  padding-bottom: 3%;
-  padding-top: 10%;
 
 #detailTitre, #detailAuteur, #detailDate
 {
