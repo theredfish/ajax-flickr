@@ -1,5 +1,7 @@
 $(document).ready(function() 
 {
+    $("#datePhoto").datepicker();
+
     $( "#dialog" ).dialog(
     { 
         autoOpen: false,
