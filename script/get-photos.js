@@ -1,10 +1,12 @@
 $(document).ready(function() 
 {
-
     // Initialization
     var page = 1
     var selectedNumber = parseInt($("input[type='radio']:checked").val())
     var mode =  $("input.mode[type='radio']:checked").val()
+    var auteur = "nobody"
+    //var userId = "noId"
+    //window.userID = "noID"
 
     $(".precedent").addClass("disabled")
     $(".suivant").addClass("disabled")
@@ -127,7 +129,7 @@ $(document).ready(function()
     function loadContent()
     {
         page = 1
-        if( $("#commune").val() == "")
+        if( $("#commune").val() == "" && $("#infoAuteur").val() == "")
         {
             alert("Vous devez saisir au moins un mot clé")
             $("#commune").focus()
@@ -167,159 +169,230 @@ $(document).ready(function()
     // Function to get images data from Flickr API in pagination mode
     function getDataPaginationMode(atPage)
     {
-        var dataSearch = "tags=" + $("#commune").val()+"&per_page="+selectedNumber+"&page="+atPage
+        var username = $("#infoAuteur").val()
         
-        if ($("#datePhoto").val() != "A partir de") {
-            date = ($("#datePhoto").val());
-            date = Date.parse(date)/1000;
-            dataSearch += "&min_taken_date="+date+"&sort=date-posted-asc"
-        } else {
-            date = "0";
-        }
-
-
-        $(".endButtons").show()
-        // Set next button available
-        $(".suivant").removeClass("disabled")
-        // Clear the div of images when a new research is done
-        $("#showImagesPaginationMode").empty();
-        
-        // Ajax JSON request
-        $.ajax(
-        {
-            type: "POST",
-            dataType: "json",
-            url: "https://api.flickr.com/services/rest/?&method=flickr.photos.search&api_key=0ec1c8867eeca73bca63ed9b7365ad5b&format=json&jsoncallback=?",
-            data: dataSearch,
-            success: function(data) 
+        var userid = (function () {
+            var ajaxResponse;
+            $.ajax(
             {
-                console.log(data)
-                $.each(data.photos.photo, function(i, image) 
-                {
-                    // Show only the good number of images
-                    if(i == selectedNumber)
-                        return false;
+                type: "POST",
+                url: "https://api.flickr.com/services/rest/?method=flickr.people.findByUsername&api_key=0ec1c8867eeca73bca63ed9b7365ad5b&format=json&jsoncallback=?",
+                data: "username="+username,
+                async:false,
+                success: function (data) {
+                    userID = data.user.id;
+                    var dataSearch = "tags=" + $("#commune").val()+"&per_page="+selectedNumber+"&page="+atPage
+        
+                    if ($("#datePhoto").val() != "A partir de") {
+                        date = ($("#datePhoto").val());
+                        date = Date.parse(date)/1000;
+                        dataSearch += "&min_upload_date="+date+"&sort=date-posted-asc"
+                    } else
+                        date = "0";
 
-                    // Call getImages function to delegate the responsability
-                    getImagesPaginationMode(image);
+                    if ($("#infoAuteur").val() != ''){
+                        dataSearch += "&user_id="+userID
+                        console.log(dataSearch)
+                    }
+
+                    $(".endButtons").show()
+                    // Set next button available
+                    $(".suivant").removeClass("disabled")
+                    // Clear the div of images when a new research is done
+                    $("#showImagesPaginationMode").empty();
                     
-                })
-            //FAILURE TODO 
-            },
-            error : function()
-            {
-                alert("error")
-            }
-        });
+                    // Ajax JSON request
+                    $.ajax(
+                    {
+                        type: "POST",
+                        dataType: "json",
+                        url: "https://api.flickr.com/services/rest/?&method=flickr.photos.search&api_key=0ec1c8867eeca73bca63ed9b7365ad5b&format=json&jsoncallback=?",
+                        data: dataSearch,
+                        success: function(data) 
+                        {
+                            console.log(data)
+                            $.each(data.photos.photo, function(i, image) 
+                            {
+                                // Show only the good number of images
+                                if(i == selectedNumber)
+                                    return false;
+
+                                // Call getImages function to delegate the responsability
+                                getImagesPaginationMode(image);
+                                
+                            })
+                        //FAILURE TODO 
+                        },
+                        error : function()
+                        {
+                            alert("error")
+                        }
+                    });
+                }, dataType: "json"});
+        }()); 
     }
 
      // Function to get images data from Flickr API in pagination mode
     function getDataPaginationPageMode(atPage)
-    {
-        var dataSearch = "tags=" + $("#commune").val()+"&per_page="+selectedNumber+"&page="+atPage
-
-        if ($("#datePhoto").val() != "A partir de") {
-            date = ($("#datePhoto").val());
-            date = Date.parse(date)/1000;
-            dataSearch += "&min_taken_date="+date+"&sort=date-posted-asc"
-        } else {
-            date = "0";
-        }
-
-        var auteur
-
-        if ($("#infoAuteur").val() != '')
-        {
-            auteur = $("#infoAuteur").val()
-        }
-        else
-        {
-            auteur = "";
-        }
-        console.log(auteur)
-
-        $(".endButtons").show()
-        // Set next button available
-        $(".suivant").removeClass("disabled")
-        // Clear the div of images when a new research is done
-        $("#showImagesPaginationMode").empty()
-        $("#showImagesPaginationMode").removeClass("justified-gallery")
+    {   
+        var username = $("#infoAuteur").val()
         
-        // Ajax JSON request
-        $.ajax(
-        {
-            type: "POST",
-            dataType: "json",
-            url: "https://api.flickr.com/services/rest/?&method=flickr.photos.search&api_key=0ec1c8867eeca73bca63ed9b7365ad5b&format=json&jsoncallback=?",
-            data: dataSearch,
-            success: function(data) 
+        var userid = (function () {
+            var ajaxResponse;
+            $.ajax(
             {
-                $.each(data.photos.photo, function(i, image) 
-                {
-                    // Show only the good number of images
-                    if(i == selectedNumber){
-                        return false;
+                type: "POST",
+                url: "https://api.flickr.com/services/rest/?method=flickr.people.findByUsername&api_key=0ec1c8867eeca73bca63ed9b7365ad5b&format=json&jsoncallback=?",
+                data: "username="+username,
+                async:false,
+                success: function (data) {
+                    userID = data.user.id;
+                    var dataSearch = "tags=" + $("#commune").val()+"&per_page="+selectedNumber+"&page="+atPage
+
+                    if ($("#datePhoto").val() != "A partir de") {
+                        date = ($("#datePhoto").val());
+                        date = Date.parse(date)/1000;
+                        dataSearch += "&min_upload_date="+date+"&sort=date-posted-asc"
+                    } else
+                        date = "0";
+
+                    if ($("#infoAuteur").val() != ''){
+                        dataSearch += "&user_id="+userID
+                        console.log(dataSearch)
                     }
 
-                    // Call getImages function to delegate the responsability
-                    getImagesPaginationPageMode(image);
+                    $(".endButtons").show()
+                    // Set next button available
+                    $(".suivant").removeClass("disabled")
+                    // Clear the div of images when a new research is done
+                    $("#showImagesPaginationMode").empty()
+                    $("#showImagesPaginationMode").removeClass("justified-gallery")
                     
-                })
-            //FAILURE TODO 
-            },
-            error : function()
-            {
-                alert("error")
-            }
-        });
+                    // Ajax JSON request
+                    $.ajax(
+                    {
+                        type: "POST",
+                        dataType: "json",
+                        url: "https://api.flickr.com/services/rest/?&method=flickr.photos.search&api_key=0ec1c8867eeca73bca63ed9b7365ad5b&format=json&jsoncallback=?",
+                        data: dataSearch,
+                        success: function(data) 
+                        {
+                            $.each(data.photos.photo, function(i, image) 
+                            {
+                                // Show only the good number of images
+                                if(i == selectedNumber){
+                                    return false;
+                                }
+
+                                // Call getImages function to delegate the responsability
+                                getImagesPaginationPageMode(image);
+                                
+                            })
+                        //FAILURE TODO 
+                        },
+                        error : function()
+                        {
+                            alert("error")
+                        }
+                    });
+                }, dataType: "json"});
+        }());      
     }
     
     // Function to get data images for the carosuel mode
     function getDataCarouselMode(atPage)
     {
-        var dataSearch = "tags=" + $("#commune").val()+"&per_page="+selectedNumber+"&page="+atPage
+        var username = $("#infoAuteur").val()
+        
+        var userid = (function () {
+            var ajaxResponse;
+            $.ajax(
+            {
+                type: "POST",
+                url: "https://api.flickr.com/services/rest/?method=flickr.people.findByUsername&api_key=0ec1c8867eeca73bca63ed9b7365ad5b&format=json&jsoncallback=?",
+                data: "username="+username,
+                async:false,
+                success: function (data) {
+                    userID = data.user.id;
+                    var dataSearch = "tags=" + $("#commune").val()+"&per_page="+selectedNumber+"&page="+atPage
 
-        if ($("#datePhoto").val() != "A partir de") {
-            date = ($("#datePhoto").val());
-            date = Date.parse(date)/1000;
-            dataSearch += "&min_taken_date="+date+"&sort=date-posted-asc"
-        } else {
-            date = "0";
-        }
+                    if ($("#datePhoto").val() != "A partir de") {
+                        date = ($("#datePhoto").val());
+                        date = Date.parse(date)/1000;
+                        dataSearch += "&min_upload_date="+date+"&sort=date-posted-asc"
+                    } else
+                        date = "0";
 
-        if ($("#infoAuteur").val() != '')
-        {
-            auteur = $("#infoAuteur").val()
-        }
-        else
-        {
-            auteur = "";
-        }
+                    if ($("#infoAuteur").val() != '')
+                        dataSearch += "&user_id="+userID
+                        console.log(dataSearch)
 
+                    $.ajax(
+                    {
+                        type: "POST",
+                        dataType: "json",
+                        url: "https://api.flickr.com/services/rest/?&method=flickr.photos.search&api_key=0ec1c8867eeca73bca63ed9b7365ad5b&format=json&jsoncallback=?",
+                        data: dataSearch,
+                        success: function(data) 
+                        {
+                            console.log("carousel")
+                            $.each(data.photos.photo, function(i, image) 
+                            {
+                                // Show only the good number of images
+                                if(i == selectedNumber)
+                                    return false;
+
+                                // Call getImages function to delegate the responsability
+                                getImagesCarouselMode(image);
+                            })
+                        },
+                        error : function()
+                        {
+                            alert("error")
+                        }
+                    });
+                }, dataType: "json"});
+        }());
+
+        
+    }
+
+    // Function to get specific information about an image (ex : title, author, date, ...)
+    function getImageInformation(id)
+    { 
         $.ajax(
         {
             type: "POST",
             dataType: "json",
-            url: "https://api.flickr.com/services/rest/?&method=flickr.photos.search&api_key=0ec1c8867eeca73bca63ed9b7365ad5b&format=json&jsoncallback=?",
-            data: dataSearch,
+            url: "https://api.flickr.com/services/rest/?&method=flickr.photos.getInfo&api_key=0ec1c8867eeca73bca63ed9b7365ad5b&format=json&jsoncallback=?",
+            data: "photo_id="+id,
             success: function(data) 
             {
-                $.each(data.photos.photo, function(i, image) 
+                var formattedTime = timeConverter(data.photo.dates.posted)
+                if (data.photo.title._content == "")
                 {
-                    // Show only the good number of images
-                    if(i == selectedNumber)
-                        return false;
-
-                    // Call getImages function to delegate the responsability
-                    getImagesCarouselMode(image);
-                })
-            },
-            error : function()
-            {
-                alert("error")
+                    $("#detailTitre").text("[Photo sans titre...]");
+                }
+                else
+                {
+                    $("#detailTitre").text(data.photo.title._content);
+                }
+                $("#detailAuteur").text(data.photo.owner.username);
+                $("#detailDate").text(formattedTime);
             }
         });
-        
+    }
+
+    function getUserID(username)
+    {
+        return $.ajax(
+        {
+            type: "POST",
+            dataType: "json",
+            url: "https://api.flickr.com/services/rest/?method=flickr.people.findByUsername&api_key=0ec1c8867eeca73bca63ed9b7365ad5b&format=json&jsoncallback=?",
+            data: "username="+username,
+            async:false,
+        }).user.responseText;
     }
 
     // Function to show image
@@ -364,32 +437,6 @@ $(document).ready(function()
 
         $(".jcarousel-list").append('<li><a class="swipebox" href="'+link+'" title="'+image.title+'" id="'+image.id+'"><img src="'+link+'" width="600" height="400" alt=""></a></li>')
         $('.jcarousel').jcarousel('reload');
-    }
-
-    // Function to get specific information about an image (ex : title, author, date, ...)
-    function getImageInformation(id)
-    { 
-        $.ajax(
-        {
-            type: "POST",
-            dataType: "json",
-            url: "https://api.flickr.com/services/rest/?&method=flickr.photos.getInfo&api_key=0ec1c8867eeca73bca63ed9b7365ad5b&format=json&jsoncallback=?",
-            data: "photo_id="+id,
-            success: function(data) 
-            {
-                var formattedTime = timeConverter(data.photo.dates.posted)
-                if (data.photo.title._content == "")
-                {
-                    $("#detailTitre").text("[Photo sans titre...]");
-                }
-                else
-                {
-                    $("#detailTitre").text(data.photo.title._content);
-                }
-                $("#detailAuteur").text(data.photo.owner.username);
-                $("#detailDate").text(formattedTime);
-            }
-        });
     }
     
     // Function to convert a date (unix time stamp) in a readable format by humans
