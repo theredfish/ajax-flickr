@@ -50,15 +50,6 @@ form
 	padding-right: 10px;
 }
 
-/*#commune
-{
-	padding-right: 2px;
-	padding-left: 2px;
-	border-right: 0px;
-	border-left: 0px;
-
-}*/
-
 
 .form-group
 {
@@ -113,5 +104,16 @@ form
 	padding-top: 1%;
 	padding-bottom: 1%;
 	margin-top: 80px;
-	width: 15%;
+	width: 30%;
+}
+
+#carouselMode
+{
+	margin-top: 10%;
+}
+
+
+.ui-dialog, .ui-widget, .ui-widget-content, .ui-corner-all, .ui-front, .ui-draggable, .ui-resizable
+{
+	margin-top: 10%;
 }
