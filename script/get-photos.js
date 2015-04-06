@@ -1,7 +1,22 @@
 $(document).ready(function() 
 {
+
+    // Initialization
+    var page = 1
+    var selectedNumber = parseInt($("input[type='radio']:checked").val())
+    var mode =  $("input.mode[type='radio']:checked").val()
+
+    $(".precedent").addClass("disabled")
+    $(".suivant").addClass("disabled")
+    $("#carouselMode").hide()
+    $("#paginationMode").hide()   
+    $(".endButtons").hide()
+
+
+    // Date picker
     $("#datePhoto").datepicker();
 
+    // Modal 
     $( "#dialog" ).dialog(
     { 
         autoOpen: false,
@@ -40,17 +55,6 @@ $(document).ready(function()
         $( "#dialog" ).dialog( "open" )
         return false;
     });
-
-    // Initialization
-    var page = 1
-    var selectedNumber = parseInt($("input[type='radio']:checked").val())
-    var mode =  $("input.mode[type='radio']:checked").val()
-
-    $(".precedent").addClass("disabled")
-    $(".suivant").addClass("disabled")
-    $("#carouselMode").hide()
-    $("#paginationMode").hide()   
-    $(".endButtons").hide()
 
     // Research button click
     $("#submit-photos-pagination").on("click", function()
@@ -117,6 +121,7 @@ $(document).ready(function()
 
     $("input.mode[type='radio']").on("change",function() 
     {
+        console.log("new mode")
         mode = $("input.mode[type='radio']:checked").val()
     });
 
@@ -133,6 +138,7 @@ $(document).ready(function()
         // Select the correct mode
         if(mode == "page")
         {
+            console.log("je charge en dessous des autres : "+page)
             getDataPaginationPageMode(page);
             $("#paginationMode").show()
             $("#carouselMode").hide()
@@ -233,7 +239,8 @@ $(document).ready(function()
         // Set next button available
         $(".suivant").removeClass("disabled")
         // Clear the div of images when a new research is done
-        $("#showImagesPaginationMode").empty();
+        $("#showImagesPaginationMode").empty()
+        $("#showImagesPaginationMode").removeClass("justified-gallery")
         
         // Ajax JSON request
         $.ajax(
@@ -318,8 +325,6 @@ $(document).ready(function()
             titre = "[Photo sans titre....]";
         }
 
-        console.log(titre)
-
         $("#showImagesPaginationMode").append('<a href="'+link+'" class="swipebox" title="'+image.title+'" id="'+image.id+'"><img src="'+link+'" alt="'+titre+'"></a>')
         
         $("#showImagesPaginationMode").justifiedGallery(
@@ -341,9 +346,8 @@ $(document).ready(function()
         {
             titre = "[Photo sans titre....]";
         }
-
         $("#showImagesPaginationMode").append('<div class="col-lg-6 col-md-6 col-xs-6 col-lg-offset-3 col-md-offset-3 col-xs-offset-3"><center><a href="'+link+'" class="swipebox" title="'+image.title+'" id="'+image.id+'"><img id="imagePage" src="'+link+'" alt="'+titre+'"></a></center></div>')
-        
+        console.log($("#showImagesPaginationMode a").length)
     }
 
     // Function to show image
