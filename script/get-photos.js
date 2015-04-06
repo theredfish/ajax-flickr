@@ -129,15 +129,15 @@ $(document).ready(function()
             return false
         }
         // Select the correct mode
-        if (mode == "regroupement") 
+        if(mode == "page")
         {
-            getDataPaginationMode(page);
+            getDataPaginationPageMode(page);
             $("#paginationMode").show()
             $("#carouselMode").hide()
         }
-        else if(mode == "page")
+        else if (mode == "regroupement") 
         {
-            getDataPaginationPageMode(page);
+            getDataPaginationMode(page);
             $("#paginationMode").show()
             $("#carouselMode").hide()
         }
@@ -284,7 +284,7 @@ $(document).ready(function()
      {
         var link = "http://farm"+image.farm+".staticflickr.com/"+image.server+"/"+image.id+"_"+image.secret+"_z.jpg";
         var title = image.title
-        $("#showImagesPaginationMode").append('</div><div class="col-lg-12 col-md-12 col-xs-12 col-lg-offset-3 col-md-offset-3 col-xs-offset-3"><a href="'+link+'" class="swipebox" title="'+image.title+'" id="'+image.id+'"><img src="'+link+'" alt="'+image.title+'"></a></div>')
+        $("#showImagesPaginationMode").append('</div><div class="col-lg-6 col-md-6 col-xs-6 col-lg-offset-3 col-md-offset-3 col-xs-offset-3"><a href="'+link+'" class="swipebox" title="'+image.title+'" id="'+image.id+'"><img src="'+link+'" alt="'+image.title+'"></a></div>')
         
     }
 
