@@ -170,6 +170,8 @@ $(document).ready(function()
         } else {
             date = "0";
         }
+
+
         $(".endButtons").show()
         // Set next button available
         $(".suivant").removeClass("disabled")
@@ -213,6 +215,20 @@ $(document).ready(function()
         } else {
             date = "0";
         }
+
+        var auteur
+
+        if ($("#infoAuteur").val() != '')
+        {
+            auteur = $("#infoAuteur").val()
+        }
+        else
+        {
+            auteur = "";
+        }
+
+        console.log(auteur)
+
         $(".endButtons").show()
         // Set next button available
         $(".suivant").removeClass("disabled")
@@ -225,7 +241,7 @@ $(document).ready(function()
             type: "POST",
             dataType: "json",
             url: "https://api.flickr.com/services/rest/?&method=flickr.photos.search&api_key=0ec1c8867eeca73bca63ed9b7365ad5b&format=json&jsoncallback=?",
-            data: "tags=" + $("#commune").val()+"&per_page="+selectedNumber+"&page="+atPage+"&min_taken_date="+date,
+            data: "tags=nantes&per_page="+selectedNumber+"&page="+atPage+"&max_taken_date="+date+"&photo.owner.username="+auteur,
             success: function(data) 
             {
                 $.each(data.photos.photo, function(i, image) 
@@ -256,12 +272,22 @@ $(document).ready(function()
         } else {
             date = "0";
         }
+
+        if ($("#infoAuteur").val() != '')
+        {
+            auteur = $("#infoAuteur").val()
+        }
+        else
+        {
+            auteur = "";
+        }
+
         $.ajax(
         {
             type: "POST",
             dataType: "json",
             url: "https://api.flickr.com/services/rest/?&method=flickr.photos.search&api_key=0ec1c8867eeca73bca63ed9b7365ad5b&format=json&jsoncallback=?",
-            data: "tags=nantes&per_page="+selectedNumber+"&page="+atPage+"&min_taken_date="+date,
+            data: "tags=nantes&per_page="+selectedNumber+"&page="+atPage+"&min_taken_date="+date+"&author="+auteur,
             success: function(data) 
             {
                 $.each(data.photos.photo, function(i, image) 

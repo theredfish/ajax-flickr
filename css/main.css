@@ -89,7 +89,7 @@ form
 #submit-photos-pagination
 {
 	color: #3A3F40;
-	margin-left: 50px;	
+	margin-left: 60px;	
 }
 
 #datePhoto
@@ -131,4 +131,9 @@ form
 {
 	width: 85%;
 	height: auto;
+}
+
+#infoAuteur
+{
+	margin-left: 50px;
 }
