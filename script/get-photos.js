@@ -223,7 +223,8 @@ $(document).ready(function()
         // Set next button available
         $(".suivant").removeClass("disabled")
         // Clear the div of images when a new research is done
-        $("#showImagesPaginationMode").empty();
+        $("#showImagesPaginationMode").empty()
+        $("#showImagesPaginationMode").removeClass("justified-gallery")
         
         // Ajax JSON request
         $.ajax(
@@ -241,7 +242,6 @@ $(document).ready(function()
                         return false;
 
                     // Call getImages function to delegate the responsability
-                    
                     getImagesPaginationPageMode(image);
                     
                 })
@@ -293,8 +293,13 @@ $(document).ready(function()
     function getImagesPaginationMode(image) 
     {
         var link = "http://farm"+image.farm+".staticflickr.com/"+image.server+"/"+image.id+"_"+image.secret+"_z.jpg";
-        var title = image.title
-        $("#showImagesPaginationMode").append('<a href="'+link+'" class="swipebox" title="'+image.title+'" id="'+image.id+'"><img src="'+link+'" alt="'+image.title+'"></a>')
+        var titre = image.title
+        if (titre == "")
+        {
+            titre = "[Photo sans titre....]";
+        }
+
+        $("#showImagesPaginationMode").append('<a href="'+link+'" class="swipebox" title="'+image.title+'" id="'+image.id+'"><img src="'+link+'" alt="'+titre+'"></a>')
         
         $("#showImagesPaginationMode").justifiedGallery(
         {
@@ -310,16 +315,20 @@ $(document).ready(function()
      function getImagesPaginationPageMode(image) 
      {
         var link = "http://farm"+image.farm+".staticflickr.com/"+image.server+"/"+image.id+"_"+image.secret+"_z.jpg";
-        var title = image.title
-
-        $("#showImagesPaginationMode").append('</div><div class="col-lg-6 col-md-6 col-xs-6 col-lg-offset-3 col-md-offset-3 col-xs-offset-3"><a href="'+link+'" class="swipebox" title="'+image.title+'" id="'+image.id+'"><img src="'+link+'" alt="'+image.title+'"></a></div>')
-        
+        var titre = image.title
+        if (titre == "")
+        {
+            titre = "[Photo sans titre....]";
+        }
+        $("#showImagesPaginationMode").append('<div class="col-lg-6 col-md-6 col-xs-6 col-lg-offset-3 col-md-offset-3 col-xs-offset-3"><center><a href="'+link+'" class="swipebox" title="'+image.title+'" id="'+image.id+'"><img id="imagePage" src="'+link+'" alt="'+titre+'"></a></center></div>')
+        console.log($("#showImagesPaginationMode a").length)
     }
 
     // Function to show image
     function getImagesCarouselMode(image) 
     {
         var link = "http://farm"+image.farm+".staticflickr.com/"+image.server+"/"+image.id+"_"+image.secret+"_z.jpg";
+
         $(".jcarousel-list").append('<li><a class="swipebox" href="'+link+'" title="'+image.title+'" id="'+image.id+'"><img src="'+link+'" width="600" height="400" alt=""></a></li>')
         $('.jcarousel').jcarousel('reload');
     }
