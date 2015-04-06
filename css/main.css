@@ -73,6 +73,7 @@ form
 	float: right;
 }
 
+
 #commune
 {
 	margin-right: 10px !important;
@@ -88,7 +89,13 @@ form
 #submit-photos-pagination
 {
 	color: #3A3F40;
+	margin-left: 20px;	
+}
+
+#datePhoto
+{
 	margin-left: 20px;
+	margin-top: 0% !important;
 }
 
 .row
@@ -115,8 +122,7 @@ form
 	margin-top: 10%;
 }
 
-
-.ui-dialog, .ui-widget, .ui-widget-content, .ui-corner-all, .ui-front, .ui-draggable, .ui-resizable
+.ui-widget, .ui-widget-content, .ui-corner-all
 {
-	margin-top: 10%;
+	z-index: 3000;
 }
