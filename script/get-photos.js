@@ -316,7 +316,7 @@ $(document).ready(function()
             titre = "[Photo sans titre....]";
         }
 
-        $("#showImagesPaginationMode").append('<div class="col-lg-6 col-md-6 col-xs-6 col-lg-offset-3 col-md-offset-3 col-xs-offset-3"><a href="'+link+'" class="swipebox" title="'+image.title+'" id="'+image.id+'"><img src="'+link+'" alt="'+titre+'"></a></div>')
+        $("#showImagesPaginationMode").append('<div class="col-lg-6 col-md-6 col-xs-6 col-lg-offset-3 col-md-offset-3 col-xs-offset-3"><center><a href="'+link+'" class="swipebox" title="'+image.title+'" id="'+image.id+'"><img id="imagePage" src="'+link+'" alt="'+titre+'"></a></center></div>')
         
     }
 

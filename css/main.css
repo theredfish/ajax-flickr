@@ -126,3 +126,9 @@ form
 {
 	z-index: 3000;
 }
+
+#imagePage
+{
+	width: 85%;
+	height: auto;
+}
