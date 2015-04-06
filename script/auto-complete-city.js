@@ -5,7 +5,7 @@ $(document).ready(function() {
             $.ajax({
                 type: "POST",
                 dataType: "json",
-                /*url: "http://infoweb-ens/~jacquin-c/codePostal/commune.php",*/
+                url: "http://infoweb-ens/~jacquin-c/codePostal/commune.php",
                 data: 'commune=' + $('#commune').val() + '&maxRows=10',
                 success: function(data) {
                     response($.map(data, function(v,i){
@@ -15,9 +15,6 @@ $(document).ready(function() {
                     }));
                 }
             });
-        },
-        select: function(event,ui) {
-            $("#result").text(ui.item.label);
-        }      
+        }    
     }); 
 });

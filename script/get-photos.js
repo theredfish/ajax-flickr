@@ -1,6 +1,9 @@
 $(document).ready(function() 
 {
-    // Initialization
+
+    /* ==============================================================
+                            INITIALISATION
+       ==============================================================*/
     var page = 1
     var selectedNumber = parseInt($("input[type='radio']:checked").val())
     var mode =  $("input.mode[type='radio']:checked").val()
@@ -26,6 +29,9 @@ $(document).ready(function()
         width: 660
     });
 
+    /* ==============================================================
+                        EVENTS / ANONYMOUS FUNCTIONS
+       ==============================================================*/
     $("body").on("click", ".swipebox", function()
     {
         // Clear the dialog box content
@@ -63,14 +69,23 @@ $(document).ready(function()
         loadContent();
     });
 
-    // Research by keypress enter event
+    // Research by keypress enter event in city input field
     $("#commune").keypress(function (e) 
     {
         if (e.which == 13) 
         {
             $('#submit-photos-pagination').trigger('click');
         }
-    });   
+    });
+
+    // Research by keypress enter event in author input field
+    $("#infoAuteur").keypress(function (e) 
+    {
+        if (e.which == 13) 
+        {
+            $('#submit-photos-pagination').trigger('click');
+        }
+    });     
 
     // Previous button click
     $(".precedent").on("click", function()
@@ -125,6 +140,9 @@ $(document).ready(function()
         mode = $("input.mode[type='radio']:checked").val()
     });
 
+    /* ==============================================================
+                            FUNCTIONS
+       ==============================================================*/
     // Function to show gallery or carousel content
     function loadContent()
     {
@@ -178,7 +196,6 @@ $(document).ready(function()
                 type: "POST",
                 url: "https://api.flickr.com/services/rest/?method=flickr.people.findByUsername&api_key=0ec1c8867eeca73bca63ed9b7365ad5b&format=json&jsoncallback=?",
                 data: "username="+username,
-                async:false,
                 success: function (data) {
                     userID = data.user.id;
                     var dataSearch = "tags=" + $("#commune").val()+"&per_page="+selectedNumber+"&page="+atPage
@@ -192,7 +209,6 @@ $(document).ready(function()
 
                     if ($("#infoAuteur").val() != ''){
                         dataSearch += "&user_id="+userID
-                        console.log(dataSearch)
                     }
 
                     $(".endButtons").show()
@@ -210,7 +226,8 @@ $(document).ready(function()
                         data: dataSearch,
                         success: function(data) 
                         {
-                            console.log(data)
+                            if (data.photos.photo.length == 0)
+                                alert("Aucune données pour cette recherche")
                             $.each(data.photos.photo, function(i, image) 
                             {
                                 // Show only the good number of images
@@ -221,11 +238,10 @@ $(document).ready(function()
                                 getImagesPaginationMode(image);
                                 
                             })
-                        //FAILURE TODO 
                         },
                         error : function()
                         {
-                            alert("error")
+                            alert("Une erreur dans la récupération des données est survenue.")
                         }
                     });
                 }, dataType: "json"});
@@ -244,7 +260,6 @@ $(document).ready(function()
                 type: "POST",
                 url: "https://api.flickr.com/services/rest/?method=flickr.people.findByUsername&api_key=0ec1c8867eeca73bca63ed9b7365ad5b&format=json&jsoncallback=?",
                 data: "username="+username,
-                async:false,
                 success: function (data) {
                     userID = data.user.id;
                     var dataSearch = "tags=" + $("#commune").val()+"&per_page="+selectedNumber+"&page="+atPage
@@ -258,7 +273,6 @@ $(document).ready(function()
 
                     if ($("#infoAuteur").val() != ''){
                         dataSearch += "&user_id="+userID
-                        console.log(dataSearch)
                     }
 
                     $(".endButtons").show()
@@ -277,6 +291,8 @@ $(document).ready(function()
                         data: dataSearch,
                         success: function(data) 
                         {
+                            if (data.photos.photo.length == 0)
+                                alert("Aucune données pour cette recherche")
                             $.each(data.photos.photo, function(i, image) 
                             {
                                 // Show only the good number of images
@@ -288,11 +304,10 @@ $(document).ready(function()
                                 getImagesPaginationPageMode(image);
                                 
                             })
-                        //FAILURE TODO 
                         },
                         error : function()
                         {
-                            alert("error")
+                            alert("Une erreur dans la récupération des données est survenue.")
                         }
                     });
                 }, dataType: "json"});
@@ -311,7 +326,6 @@ $(document).ready(function()
                 type: "POST",
                 url: "https://api.flickr.com/services/rest/?method=flickr.people.findByUsername&api_key=0ec1c8867eeca73bca63ed9b7365ad5b&format=json&jsoncallback=?",
                 data: "username="+username,
-                async:false,
                 success: function (data) {
                     userID = data.user.id;
                     var dataSearch = "tags=" + $("#commune").val()+"&per_page="+selectedNumber+"&page="+atPage
@@ -325,7 +339,6 @@ $(document).ready(function()
 
                     if ($("#infoAuteur").val() != '')
                         dataSearch += "&user_id="+userID
-                        console.log(dataSearch)
 
                     $.ajax(
                     {
@@ -335,7 +348,8 @@ $(document).ready(function()
                         data: dataSearch,
                         success: function(data) 
                         {
-                            console.log("carousel")
+                            if (data.photos.photo.length == 0)
+                                alert("Aucune données pour cette recherche")
                             $.each(data.photos.photo, function(i, image) 
                             {
                                 // Show only the good number of images
@@ -348,7 +362,7 @@ $(document).ready(function()
                         },
                         error : function()
                         {
-                            alert("error")
+                            alert("Une erreur dans la récupération des données est survenue.")
                         }
                     });
                 }, dataType: "json"});
@@ -381,18 +395,6 @@ $(document).ready(function()
                 $("#detailDate").text(formattedTime);
             }
         });
-    }
-
-    function getUserID(username)
-    {
-        return $.ajax(
-        {
-            type: "POST",
-            dataType: "json",
-            url: "https://api.flickr.com/services/rest/?method=flickr.people.findByUsername&api_key=0ec1c8867eeca73bca63ed9b7365ad5b&format=json&jsoncallback=?",
-            data: "username="+username,
-            async:false,
-        }).user.responseText;
     }
 
     // Function to show image
