@@ -1,20 +1,24 @@
 $(document).ready(function() 
 {
-    $( "#dialog" ).dialog({ 
+    $( "#dialog" ).dialog(
+    { 
         autoOpen: false,
         title: "Informations de l'image",
         width: 660
     });
 
-    $("body").on("click", ".swipebox", function(){
+    $("body").on("click", ".swipebox", function()
+    {
         // Clear the dialog box content
         $("#dialog").empty()
         
         // If the dialog box is already open we close it
         var isOpen = $("#dialog").dialog("isOpen")
-        if (isOpen) {
+        if (isOpen) 
+        {
             console.log("open")
-            $("#dialog").dialog({
+            $("#dialog").dialog(
+            {
                 position: { my: "center", at: "center", of: window }
             });
         }
@@ -47,19 +51,23 @@ $(document).ready(function()
     $(".endButtons").hide()
 
     // Research button click
-    $("#submit-photos-pagination").on("click", function(){
+    $("#submit-photos-pagination").on("click", function()
+    {
         loadContent();
     });
 
     // Research by keypress enter event
-    $("#commune").keypress(function (e) {
-        if (e.which == 13) {
+    $("#commune").keypress(function (e) 
+    {
+        if (e.which == 13) 
+        {
             $('#submit-photos-pagination').trigger('click');
         }
     });   
 
     // Previous button click
-    $(".precedent").on("click", function(){
+    $(".precedent").on("click", function()
+    {
         // Always close the dialog box if it's open
         var isOpen = $("#dialog").dialog("isOpen")
         if (isOpen)
@@ -72,7 +80,8 @@ $(document).ready(function()
     });
 
     // Next button click
-    $(".suivant").on("click", function(){
+    $(".suivant").on("click", function()
+    {
         // Always close the dialog box if it's open
         var isOpen = $("#dialog").dialog("isOpen")
         if (isOpen)
@@ -84,30 +93,41 @@ $(document).ready(function()
     });
 
     // When a change occurs, update the number of images to display
-    $("input[type='radio']").on("change",function() {
+    $("input[type='radio']").on("change",function() 
+    {
         selectedNumber = parseInt($("input[type='radio']:checked").val());
     })
 
-    $("input.mode[type='radio']").on("change",function() {
+    $("input.mode[type='radio']").on("change",function() 
+    {
         mode = $("input.mode[type='radio']:checked").val()
     });
 
     // Function to show gallery or carousel content
-    function loadContent(){
+    function loadContent()
+    {
         page = 1
-        if( $("#commune").val() == ""){
+        if( $("#commune").val() == "")
+        {
             alert("Vous devez saisir au moins un mot clé")
             $("#commune").focus()
             return false
         }
         // Select the correct mode
-        if (mode == "page") {
+        if (mode == "regroupement") 
+        {
             getDataPaginationMode(page);
             $("#paginationMode").show()
             $("#carouselMode").hide()
         }
-
-        else {
+        else if(mode == "page")
+        {
+            getDataPaginationPageMode(page);
+            $("#paginationMode").show()
+            $("#carouselMode").hide()
+        }
+        else 
+        {
             getDataCarouselMode(page);
             $("#carouselMode").show() 
             $("#paginationMode").hide()
@@ -115,7 +135,8 @@ $(document).ready(function()
     }
 
     // This function change class of previous button relative with page
-    function watchPreviousButton(page){
+    function watchPreviousButton(page)
+    {
         if (page == 1)
             $(".precedent").addClass("disabled")
         else
@@ -133,12 +154,14 @@ $(document).ready(function()
         $("#showImagesPaginationMode").empty();
         
         // Ajax JSON request
-        $.ajax({
+        $.ajax(
+        {
             type: "POST",
             dataType: "json",
             url: "https://api.flickr.com/services/rest/?&method=flickr.photos.search&api_key=0ec1c8867eeca73bca63ed9b7365ad5b&format=json&jsoncallback=?",
             data: "tags=" + $("#commune").val()+"&per_page="+selectedNumber+"&page="+atPage,
-            success: function(data) {
+            success: function(data) 
+            {
                 $.each(data.photos.photo, function(i, image) 
                 {
                     // Show only the good number of images
@@ -151,7 +174,45 @@ $(document).ready(function()
                 })
             //FAILURE TODO 
             },
-            error : function(){
+            error : function()
+            {
+                alert("error")
+            }
+        });
+    }
+
+     // Function to get images data from Flickr API in pagination mode
+    function getDataPaginationPageMode(atPage)
+    {
+        $(".endButtons").show()
+        // Set next button available
+        $(".suivant").removeClass("disabled")
+        // Clear the div of images when a new research is done
+        $("#showImagesPaginationMode").empty();
+        
+        // Ajax JSON request
+        $.ajax(
+        {
+            type: "POST",
+            dataType: "json",
+            url: "https://api.flickr.com/services/rest/?&method=flickr.photos.search&api_key=0ec1c8867eeca73bca63ed9b7365ad5b&format=json&jsoncallback=?",
+            data: "tags=" + $("#commune").val()+"&per_page="+selectedNumber+"&page="+atPage,
+            success: function(data) 
+            {
+                $.each(data.photos.photo, function(i, image) 
+                {
+                    // Show only the good number of images
+                    if(i == selectedNumber)
+                        return false;
+
+                    // Call getImages function to delegate the responsability
+                    getImagesPaginationPageMode(image);
+                    
+                })
+            //FAILURE TODO 
+            },
+            error : function()
+            {
                 alert("error")
             }
         });
@@ -160,12 +221,14 @@ $(document).ready(function()
     // Function to get data images for the carosuel mode
     function getDataCarouselMode(atPage)
     {
-        $.ajax({
+        $.ajax(
+        {
             type: "POST",
             dataType: "json",
             url: "https://api.flickr.com/services/rest/?&method=flickr.photos.search&api_key=0ec1c8867eeca73bca63ed9b7365ad5b&format=json&jsoncallback=?",
             data: "tags=nantes&per_page="+selectedNumber+"&page="+atPage,
-            success: function(data) {
+            success: function(data) 
+            {
                 $.each(data.photos.photo, function(i, image) 
                 {
                     // Show only the good number of images
@@ -176,7 +239,8 @@ $(document).ready(function()
                     getImagesCarouselMode(image);
                 })
             },
-            error : function(){
+            error : function()
+            {
                 alert("error")
             }
         });
@@ -184,22 +248,34 @@ $(document).ready(function()
     }
 
     // Function to show image
-    function getImagesPaginationMode(image) {
+    function getImagesPaginationMode(image) 
+    {
         var link = "http://farm"+image.farm+".staticflickr.com/"+image.server+"/"+image.id+"_"+image.secret+"_z.jpg";
         var title = image.title
         $("#showImagesPaginationMode").append('<a href="'+link+'" class="swipebox" title="'+image.title+'" id="'+image.id+'"><img src="'+link+'" alt="'+image.title+'"></a>')
         
-        $("#showImagesPaginationMode").justifiedGallery({
+        $("#showImagesPaginationMode").justifiedGallery(
+        {
             lastRow : 'nojustify', 
             rowHeight : 300, 
             margins : 1
-        }).on('jg.complete', function () {
+        }).on('jg.complete', function () 
+        {
           return true;
         });
     }
 
+     function getImagesPaginationPageMode(image) 
+     {
+        var link = "http://farm"+image.farm+".staticflickr.com/"+image.server+"/"+image.id+"_"+image.secret+"_z.jpg";
+        var title = image.title
+        $("#showImagesPaginationMode").append('</div><div class="col-lg-12 col-md-12 col-xs-12 col-lg-offset-3 col-md-offset-3 col-xs-offset-3"><a href="'+link+'" class="swipebox" title="'+image.title+'" id="'+image.id+'"><img src="'+link+'" alt="'+image.title+'"></a></div>')
+        
+    }
+
     // Function to show image
-    function getImagesCarouselMode(image) {
+    function getImagesCarouselMode(image) 
+    {
         var link = "http://farm"+image.farm+".staticflickr.com/"+image.server+"/"+image.id+"_"+image.secret+"_z.jpg";
         $(".jcarousel-list").append('<li><a class="swipebox" href="'+link+'" title="'+image.title+'" id="'+image.id+'"><img src="'+link+'" width="600" height="400" alt=""></a></li>')
         $('.jcarousel').jcarousel('reload');
