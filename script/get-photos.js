@@ -1,7 +1,22 @@
 $(document).ready(function() 
 {
+
+    // Initialization
+    var page = 1
+    var selectedNumber = parseInt($("input[type='radio']:checked").val())
+    var mode =  $("input.mode[type='radio']:checked").val()
+
+    $(".precedent").addClass("disabled")
+    $(".suivant").addClass("disabled")
+    $("#carouselMode").hide()
+    $("#paginationMode").hide()   
+    $(".endButtons").hide()
+
+
+    // Date picker
     $("#datePhoto").datepicker();
 
+    // Modal 
     $( "#dialog" ).dialog(
     { 
         autoOpen: false,
@@ -40,17 +55,6 @@ $(document).ready(function()
         $( "#dialog" ).dialog( "open" )
         return false;
     });
-
-    // Initialization
-    var page = 1
-    var selectedNumber = parseInt($("input[type='radio']:checked").val())
-    var mode =  $("input.mode[type='radio']:checked").val()
-
-    $(".precedent").addClass("disabled")
-    $(".suivant").addClass("disabled")
-    $("#carouselMode").hide()
-    $("#paginationMode").hide()   
-    $(".endButtons").hide()
 
     // Research button click
     $("#submit-photos-pagination").on("click", function()
@@ -117,6 +121,7 @@ $(document).ready(function()
 
     $("input.mode[type='radio']").on("change",function() 
     {
+        console.log("new mode")
         mode = $("input.mode[type='radio']:checked").val()
     });
 
@@ -133,6 +138,7 @@ $(document).ready(function()
         // Select the correct mode
         if(mode == "page")
         {
+            console.log("je charge en dessous des autres : "+page)
             getDataPaginationPageMode(page);
             $("#paginationMode").show()
             $("#carouselMode").hide()
@@ -235,6 +241,7 @@ $(document).ready(function()
                         return false;
 
                     // Call getImages function to delegate the responsability
+                    
                     getImagesPaginationPageMode(image);
                     
                 })
@@ -304,6 +311,7 @@ $(document).ready(function()
      {
         var link = "http://farm"+image.farm+".staticflickr.com/"+image.server+"/"+image.id+"_"+image.secret+"_z.jpg";
         var title = image.title
+
         $("#showImagesPaginationMode").append('</div><div class="col-lg-6 col-md-6 col-xs-6 col-lg-offset-3 col-md-offset-3 col-xs-offset-3"><a href="'+link+'" class="swipebox" title="'+image.title+'" id="'+image.id+'"><img src="'+link+'" alt="'+image.title+'"></a></div>')
         
     }
