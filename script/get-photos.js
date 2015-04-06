@@ -33,7 +33,6 @@ $(document).ready(function()
         var isOpen = $("#dialog").dialog("isOpen")
         if (isOpen) 
         {
-            console.log("open")
             $("#dialog").dialog(
             {
                 position: { my: "center", at: "center", of: window }
@@ -121,7 +120,6 @@ $(document).ready(function()
 
     $("input.mode[type='radio']").on("change",function() 
     {
-        console.log("new mode")
         mode = $("input.mode[type='radio']:checked").val()
     });
 
@@ -138,7 +136,6 @@ $(document).ready(function()
         // Select the correct mode
         if(mode == "page")
         {
-            console.log("je charge en dessous des autres : "+page)
             getDataPaginationPageMode(page);
             $("#paginationMode").show()
             $("#carouselMode").hide()
@@ -170,9 +167,12 @@ $(document).ready(function()
     // Function to get images data from Flickr API in pagination mode
     function getDataPaginationMode(atPage)
     {
-        if ($("#datePhoto").val() != '') {
+        var dataSearch = "tags=" + $("#commune").val()+"&per_page="+selectedNumber+"&page="+atPage
+        
+        if ($("#datePhoto").val() != "A partir de") {
             date = ($("#datePhoto").val());
             date = Date.parse(date)/1000;
+            dataSearch += "&min_taken_date="+date+"&sort=date-posted-asc"
         } else {
             date = "0";
         }
@@ -190,9 +190,10 @@ $(document).ready(function()
             type: "POST",
             dataType: "json",
             url: "https://api.flickr.com/services/rest/?&method=flickr.photos.search&api_key=0ec1c8867eeca73bca63ed9b7365ad5b&format=json&jsoncallback=?",
-            data: "tags=" + $("#commune").val()+"&per_page="+selectedNumber+"&page="+atPage+"&min_taken_date="+date,
+            data: dataSearch,
             success: function(data) 
             {
+                console.log(data)
                 $.each(data.photos.photo, function(i, image) 
                 {
                     // Show only the good number of images
@@ -215,9 +216,12 @@ $(document).ready(function()
      // Function to get images data from Flickr API in pagination mode
     function getDataPaginationPageMode(atPage)
     {
-        if ($("#datePhoto").val() != '') {
+        var dataSearch = "tags=" + $("#commune").val()+"&per_page="+selectedNumber+"&page="+atPage
+
+        if ($("#datePhoto").val() != "A partir de") {
             date = ($("#datePhoto").val());
             date = Date.parse(date)/1000;
+            dataSearch += "&min_taken_date="+date+"&sort=date-posted-asc"
         } else {
             date = "0";
         }
@@ -232,7 +236,6 @@ $(document).ready(function()
         {
             auteur = "";
         }
-
         console.log(auteur)
 
         $(".endButtons").show()
@@ -248,14 +251,15 @@ $(document).ready(function()
             type: "POST",
             dataType: "json",
             url: "https://api.flickr.com/services/rest/?&method=flickr.photos.search&api_key=0ec1c8867eeca73bca63ed9b7365ad5b&format=json&jsoncallback=?",
-            data: "tags=nantes&per_page="+selectedNumber+"&page="+atPage+"&max_taken_date="+date+"&photo.owner.username="+auteur,
+            data: dataSearch,
             success: function(data) 
             {
                 $.each(data.photos.photo, function(i, image) 
                 {
                     // Show only the good number of images
-                    if(i == selectedNumber)
+                    if(i == selectedNumber){
                         return false;
+                    }
 
                     // Call getImages function to delegate the responsability
                     getImagesPaginationPageMode(image);
@@ -273,9 +277,12 @@ $(document).ready(function()
     // Function to get data images for the carosuel mode
     function getDataCarouselMode(atPage)
     {
-        if ($("#datePhoto").val() != '') {
+        var dataSearch = "tags=" + $("#commune").val()+"&per_page="+selectedNumber+"&page="+atPage
+
+        if ($("#datePhoto").val() != "A partir de") {
             date = ($("#datePhoto").val());
             date = Date.parse(date)/1000;
+            dataSearch += "&min_taken_date="+date+"&sort=date-posted-asc"
         } else {
             date = "0";
         }
@@ -294,7 +301,7 @@ $(document).ready(function()
             type: "POST",
             dataType: "json",
             url: "https://api.flickr.com/services/rest/?&method=flickr.photos.search&api_key=0ec1c8867eeca73bca63ed9b7365ad5b&format=json&jsoncallback=?",
-            data: "tags=nantes&per_page="+selectedNumber+"&page="+atPage+"&min_taken_date="+date+"&author="+auteur,
+            data: dataSearch,
             success: function(data) 
             {
                 $.each(data.photos.photo, function(i, image) 
@@ -347,7 +354,7 @@ $(document).ready(function()
             titre = "[Photo sans titre....]";
         }
         $("#showImagesPaginationMode").append('<div class="col-lg-6 col-md-6 col-xs-6 col-lg-offset-3 col-md-offset-3 col-xs-offset-3"><center><a href="'+link+'" class="swipebox" title="'+image.title+'" id="'+image.id+'"><img id="imagePage" src="'+link+'" alt="'+titre+'"></a></center></div>')
-        console.log($("#showImagesPaginationMode a").length)
+        
     }
 
     // Function to show image
