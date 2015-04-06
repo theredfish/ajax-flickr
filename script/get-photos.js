@@ -76,7 +76,15 @@ $(document).ready(function()
         if (page != 1)
             page--
         watchPreviousButton(page)
-        getDataPaginationMode(page)
+        if (mode == "page") 
+        {
+            getDataPaginationPageMode(page)
+        }
+        else
+        {
+            getDataPaginationMode(page)
+        }
+        
     });
 
     // Next button click
@@ -89,7 +97,14 @@ $(document).ready(function()
 
         page++;
         watchPreviousButton(page)
-        getDataPaginationMode(page);
+        if (mode == "page") 
+        {
+            getDataPaginationPageMode(page)
+        }
+        else
+        {
+            getDataPaginationMode(page)
+        }
     });
 
     // When a change occurs, update the number of images to display
