@@ -80,12 +80,15 @@ form
 	margin-top: 0%;
 	width: 100%;
 	color: #3A3F40;
+	padding-left: 5px;
+	padding-right: 5px;
 
 }
 
 #submit-photos-pagination
 {
 	color: #3A3F40;
+	margin-left: 20px;
 }
 
 .row
